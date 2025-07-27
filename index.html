@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App</title>
+
+  <style>
+    body {
+      width: 99%;
+      height: 100%;
+      margin: 0 auto;
+      background-image: linear-gradient(to right,
+          #051937,
+          #004d7a,
+          #008793,
+          #00bf72,
+          #a8eb12);
+    }
+
+    .Data-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+    }
+
+    #input-field {
+      padding: 10px 25px;
+      font-size: 1.2rem;
+      text-align: center;
+      border-radius: 10px;
+    }
+
+    #btn1 {
+      padding: 10px 25px;
+      font-size: 1.1rem;
+      text-align: center;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .CreateLi {
+      width: 23.7%;
+      display: flex;
+      margin: 1rem auto;
+      justify-content: space-between;
+      padding: 10px 20px;
+      font-size: 1.3rem;
+      list-style-type: disclosure-closed;
+      background-color: #ffffffb3;
+      box-shadow: #dcb9ef 0px 3px 8px;
+    }
+
+    .DynamicBtn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1.1rem;
+      background-color: #e7e4e4b3;
+      box-shadow: #dcb9ef 0px 3px 8px;
+      cursor: pointer;
+    }
+
+    li {
+      margin: 0.44rem;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Todo List</h1>
+  <div class="Data-section">
+    <input type="text" id="input-field" placeholder="Enter your todo" />
+    <button id="btn1">Add Data</button>
+  </div>
+  <div class="Created-Elem"></div>
+
+  <script>
+
+    let Elem = document.getElementById("input-field")
+    let btn = document.getElementById("btn1")
+    let Data = document.querySelector(".Created-Elem")
+
+    // Show dala always reload the broswer not removed 
+    window.addEventListener('DOMContentLoaded', () => {
+      let getLocalData = JSON.parse(localStorage.getItem("local-Data"))
+
+      getLocalData.forEach((curElem) => {
+      let createTag = document.createElement("span")
+      createTag.innerHTML = `<li>${curElem}</li><button class="DynamicBtn">delete</button>`
+      createTag.classList.add("CreateLi")
+      Data.append(createTag)
+
+    })
+})
+
+
+    // New Add in add in local Stroage 
+
+    let addTodo = () => {
+      let deleteSpace = Elem.value.trim()
+      if (deleteSpace === "") {
+        alert("Please Enter Some Text")
+      } else {
+        let createTag = document.createElement("span")
+        createTag.innerHTML = `<li>${deleteSpace}</li><button class="DynamicBtn">delete</button>`
+        createTag.classList.add("CreateLi")
+        Data.append(createTag)
+
+        let previousStroreData = JSON.parse(localStorage.getItem("local-Data")) || []
+        previousStroreData.push(deleteSpace)
+        localStorage.setItem("local-Data", JSON.stringify(previousStroreData))
+
+        Elem.value = ""
+      }
+    }
+
+    btn.addEventListener('click', () => {
+      addTodo()
+    })
+
+    // click deleted button to delete Data in Array
+
+    Data.addEventListener('click', (e) => {
+      if (e.target.classList.contains("DynamicBtn")) {
+
+        var userClick = e.target.previousElementSibling.innerHTML
+
+        let getData = JSON.parse(localStorage.getItem("local-Data"))
+
+        let matchingData = getData.filter((curElem) =>  curElem !== userClick )
+
+        localStorage.setItem("local-Data", JSON.stringify(matchingData))
+
+        e.target.parentElement.remove()
+      }
+      alert(userClick + "Confrom deleted")
+    })
+
+
+  </script>
+</body>
+
+</html>
